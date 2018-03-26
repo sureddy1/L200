@@ -1,0 +1,91 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "webSiteName": {
+            "type": "String"
+        },
+        "serverFarmName": {
+            "type": "String"
+        }
+    },
+    "variables": {
+	"repoURL_public": "https://github.com/sureddy1/L200_Scenario1.git",
+    "repoURL": "https://github.com/sureddy1/L200_Scenario1.git",
+    "branch": "master"
+	},
+    "resources": [
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "sku": {
+                "name": "S1",
+                "tier": "Standard",
+                "size": "S1",
+                "family": "S",
+                "capacity": 1
+            },
+            "kind": "app",
+            "name": "[parameters('serverFarmName')]",
+            "apiVersion": "2016-09-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "name": "[parameters('serverFarmName')]"
+            },
+            "dependsOn": []
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "kind": "app",
+            "name": "[parameters('webSiteName')]",
+            "apiVersion": "2016-08-01",
+            "location": "[resourceGroup().location]",
+            "properties": {                
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverFarmName'))]"                
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('serverFarmName'))]"
+            ]
+        },
+		 {
+                    "apiVersion": "2015-08-01",
+                    "name": "[concat(parameters('webSiteName'), '/web')]",
+                    "type": "Microsoft.Web/sites/sourcecontrols",
+					"location": "[resourceGroup().location]",            
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]"
+                    ],
+                    "properties": {
+                        "RepoUrl": "[variables('repoURL')]",
+                        "branch": "[variables('branch')]",
+                        "IsManualIntegration": true
+                    }
+          },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "name": "[concat(parameters('webSiteName'), '/web')]",
+            "apiVersion": "2016-08-01",
+            "location": "[resourceGroup().location]",            
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php",
+                    "hostingstart.html"
+                ],
+                "use32BitWorkerProcess": false,
+                "javaVersion": "1.8",
+                "javaContainer": "TOMCAT",
+                "javaContainerVersion": "8.5"                
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]"
+            ]
+        }
+    ]
+}
