@@ -10,8 +10,8 @@
         }
     },
     "variables": {
-	"repoURL_public": "https://github.com/sureddy1/L200_Scenario1.git",
-    "repoURL": "https://github.com/sureddy1/L200_Scenario1.git",
+	"repoURL_public": "https://github.com/sureddy1/L200_S4.git",
+    "repoURL": "https://github.com/sureddy1/L200_S4.git",
     "branch": "master"
 	},
     "resources": [
