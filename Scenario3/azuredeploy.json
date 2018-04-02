@@ -44,8 +44,8 @@
             },
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', parameters('serverFarmName'))]"
-            ]
-        },
+            ],        
+		"resources": [
 		 {
                     "apiVersion": "2015-08-01",
                     "name": "[concat(parameters('webSiteName'), '/web')]",
@@ -88,9 +88,9 @@
             ]
         },
 		{
-          "apiVersion": "2014-11-01",
+          "apiVersion": "2015-08-01",
           "name": "appsettings",
-          "type": "config",
+          "type": "config",          
           "dependsOn": [
             "[resourceId('Microsoft.Web/Sites', parameters('webSiteName'))]"
           ],
@@ -98,5 +98,7 @@
             "CATALINA_OPTS": "-Xms4096m -Xmx4096m"            
           }
         }
+	  ]
+	 }
     ]
 }
