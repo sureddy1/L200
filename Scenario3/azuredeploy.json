@@ -1,18 +1,11 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "webSiteName": {
-            "type": "String"
-        },
-        "serverFarmName": {
-            "type": "String"
-        }
-    },
     "variables": {
-	"repoURL_public": "https://github.com/sureddy1/L200_S3.git",
-    "repoURL": "https://github.com/sureddy1/L200_S3.git",
-    "branch": "master"
+	"serverFarmName":"[replace(resourceGroup().name,'.','')]",
+        "webSiteName": "[concat(toLower(variables('serverFarmName')), uniqueString(resourceGroup().id))]",
+    	"repoURL": "https://github.com/sureddy1/L200_S3.git",
+    	"branch": "master"
 	},
     "resources": [
         {
@@ -25,34 +18,34 @@
                 "capacity": 1
             },
             "kind": "app",
-            "name": "[parameters('serverFarmName')]",
+            "name": "[variables('serverFarmName')]",
             "apiVersion": "2016-09-01",
             "location": "[resourceGroup().location]",
             "properties": {
-                "name": "[parameters('serverFarmName')]"
+                "name": "[variables('serverFarmName')]"
             },
             "dependsOn": []
         },
         {
             "type": "Microsoft.Web/sites",
             "kind": "app",
-            "name": "[parameters('webSiteName')]",
+            "name": "[variables('webSiteName')]",
             "apiVersion": "2016-08-01",
             "location": "[resourceGroup().location]",
             "properties": {                
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverFarmName'))]"                
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('serverFarmName'))]"                
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', parameters('serverFarmName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', variables('serverFarmName'))]"
             ],        
 		"resources": [
 		 {
                     "apiVersion": "2015-08-01",
-                    "name": "[concat(parameters('webSiteName'), '/web')]",
+                    "name": "[concat(variables('webSiteName'), '/web')]",
                     "type": "Microsoft.Web/sites/sourcecontrols",
 					"location": "[resourceGroup().location]",            
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]"
+                        "[resourceId('Microsoft.Web/sites', variables('webSiteName'))]"
                     ],
                     "properties": {
                         "RepoUrl": "[variables('repoURL')]",
@@ -62,7 +55,7 @@
           },
         {
             "type": "Microsoft.Web/sites/config",
-            "name": "[concat(parameters('webSiteName'), '/web')]",
+            "name": "[concat(variables('webSiteName'), '/web')]",
             "apiVersion": "2016-08-01",
             "location": "[resourceGroup().location]",            
             "properties": {
@@ -84,7 +77,7 @@
                 "javaContainerVersion": "8.5"                
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]"
+                "[resourceId('Microsoft.Web/sites', variables('webSiteName'))]"
             ]
         },
 		{
@@ -92,7 +85,7 @@
           "name": "appsettings",
           "type": "config",          
           "dependsOn": [
-            "[resourceId('Microsoft.Web/Sites', parameters('webSiteName'))]"
+            "[resourceId('Microsoft.Web/Sites', variables('webSiteName'))]"
           ],
           "properties": {
             "CATALINA_OPTS": "-Xms4096m -Xmx4096m"            
