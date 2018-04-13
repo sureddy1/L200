@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",    
     "variables": {
 	"serverFarmName":"[replace(resourceGroup().name,'.','')]",
-        "webSiteName": "[concat(toLower(variables('hostingPlanName')), uniqueString(resourceGroup().id))]",
+        "webSiteName": "[concat(toLower(variables('serverFarmName')), uniqueString(resourceGroup().id))]",
     	"repoURL": "https://github.com/sureddy1/L200_S1.git",
     	"branch": "master"
 	},
