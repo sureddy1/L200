@@ -4,7 +4,7 @@
     "variables": {
 	"serverFarmName":"[replace(resourceGroup().name,'.','')]",
         "webSiteName": "[concat(toLower(variables('serverFarmName')), uniqueString(resourceGroup().id))]",
-    	"repoURL": "https://sureddys@bitbucket.org/sureddys/l200_s4.git",
+    	"repoURL": "https://github.com/sureddy1/L200_S4.git",
     	"branch": "master"
 	},
     "resources": [
@@ -15,7 +15,7 @@
                 "tier": "Standard",
                 "size": "S1",
                 "family": "S",
-                "capacity": 2
+                "capacity": 1
             },
             "kind": "app",
             "name": "[variables('serverFarmName')]",
